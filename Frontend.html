@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en" ng-app="hw8">
+<head>
+    <title>Stock Market Search</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/style.css" >
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
+    <!-- Angular AutoComplete -->
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>-->
+
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>-->
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-resource.js" type="text/javascript"></script>-->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
+
+    <!--<script src="https://code.highcharts.com/highcharts.js"></script>-->
+    <!--<script src="https://code.highcharts.com/modules/exporting.js"></script>-->
+    <!--<script src="https://code.highcharts.com/stock/highstock.js"></script>-->
+    <!--<script src="https://code.highcharts.com/stock/modules/exporting.js"></script>-->
+    <script src="https://code.highcharts.com/stock/highstock.js"></script>
+    <script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
+
+
+    <script src="HW_8.js"></script>
+
+</head>
+<body ng-controller = "mainController as ctrl">
+<br>
+
+<div class="container" id = "topheader">
+        <p id = "header">Stock Market Search</p>
+        <form class="form-group" >
+
+            <div class="row">
+                <div class="col-md-3">
+                    Enter the stock name or symbol <span class = 'text-danger'>*</span>
+                </div>
+                <div class="col-md-6"  layout="column" id="autoComplete">
+                    <md-autocomplete
+                            required
+                            md-no-cache="false"
+                            md-input-name = "autocomplete"
+                            md-selected-item="ctrl.selectedItem"
+                            md-search-text-change="ctrl.searchTextChange(ctrl.searchText)"
+                            md-search-text="ctrl.searchText"
+                            md-selected-item-change="ctrl.selectedItemChange(item)"
+                            md-items="item in ctrl.querySearch(ctrl.searchText)"
+                            md-item-text="item.symbol"
+                            md-min-length="0"
+                            md-menu-class="autocomplete-custom-template">
+                        <md-item-template>
+                            {{item.outlook}}
+                        </md-item-template>
+                    </md-autocomplete>
+                </div>
+
+                <div class="col-md-3">
+                    <div id="getText" style="display: none">{{ctrl.selectedItem.symbol}}</div>
+                    <button id = "getQuote" class="btn btn-primary" ng-click = "toggleFav()"
+                             type="submit">
+                        <span class="glyphicon glyphicon-search"></span> Get
+                        Quote</button>
+                    <button class="btn btn-default" type="button" ng-click = "clear(userInput)"><span class="glyphicon glyphicon-refresh"></span> Clear</button>
+                </div>
+            </div>
+        </form>
+    <hr>
+</div>
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<br>
+<br>
+
+<div class = "container" id = "mainSection" >
+    <div class="panel panel-default FavouriteList" ng-show="showFav">
+        <div class="panel-heading">
+            <!--<div id = "Favourite">Favourite List</div>-->
+            <strong>Favourite List</strong>
+            <div id = "options" class="pull-right">
+                <label id="label" for="refreshToggle">
+                    <span class="hidden-xs"> Automatic Refersh:</span>
+                    </label>
+                <input id = "refreshToggle" type="checkbox"  data-toggle="toggle">
+                <button type="button" class="btn btn-default btn-sm" id = "refreshButton" >
+                    <span class="glyphicon glyphicon-refresh"></span>
+                </button>
+                <button ng-click = "showFav = !showFav" type="button" class="btn btn-default btn-sm" id = "nextButton">
+                    <span class="glyphicon glyphicon-chevron-right"></span>
+                </button>
+            </div>
+        </div> <!-- panel-heading -->
+
+        <div class="panel-body">
+            <div class = "row">
+            <div class = "col-md-6">
+                <b id = "sortMenu" class="col-md-3">
+                    Sort by
+                </b>
+
+                    <select class="selectpicker show-tick">
+                        <option value="Default" > Default</option>
+                        <option value="Symbol">Symbol</option>
+                        <option value="Price">Price</option>
+                        <option value="Change">Change</option>
+                        <option value="changePercent">Change Percent</option>
+                    </select>
+            </div>
+            <div class = "col-md-6">
+                <b id = "orderMenu" class=" col-md-3">
+                    Order by
+                </b>
+
+                    <select class="selectpicker">
+                        <option value="Ascending"> Ascending</option>
+                        <option value="Descending ">Descending </option>
+                    </select>
+            </div>
+        </div>
+            <br>
+            <table class="table table-striped " id="companyTable">
+                <tr>
+                    <th>Symbol</th>
+                    <th>Stock Price</th>
+                    <th>Change(Change Percent)</th>
+                    <th>Volume</th>
+                </tr>
+            </table>
+
+        </div>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    </div>  <!--panel -->
+</div>
+
+<div class = "container displayChart" ng-hide = "showFav">
+
+    <div class="panel panel-default displayChart">
+
+        <div class="panel-heading">
+            <button ng-click = "showFav = !showFav" type="button" class="btn btn-default btn-sm" id = "previousButton">
+                <span class="glyphicon glyphicon-chevron-left"></span>
+            </button>
+            <strong class="text-center" id="stockDetail" style="text-align: center;">Stock Details</strong>
+        </div>
+
+
+    <div class="panel-body">
+        <div class="stockCharts">
+            <ul class="nav nav-pills">
+                <li class="active">
+                    <a class="nav-link active" data-toggle="tab" href="#currentStock"><span class="glyphicon glyphicon-dashboard"></span>
+                        <span class="hidden-xs">Current Stock</span>
+                        <span class="visible-xs">Stock</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link" id="historicalDataTab" data-toggle="tab" href="#historicalCharts"><span class="glyphicon glyphicon-stats"></span>
+                        <span class="hidden-xs">Historical Charts</span>
+                        <span class="visible-xs">Charts</span>
+
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link" data-toggle="tab" href="#newsFeeds"><span class="glyphicon glyphicon-link"></span>
+                        <span class="hidden-xs">News Feeds</span>
+                        <span class="visible-xs">News</span>
+                        </a>
+                </li>
+            </ul>
+            <hr>
+            <div class="tab-content">
+                <div id="currentStock" class="tab-pane fade in active">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <b>Stock Details</b>
+                            <div class="pull-right">
+                                <button type="button" class="btn btn-default" id="toggleStarButton">
+                                    <!--ng-src="{{interface == 'UP' && 'green-checkmark.png' || 'big-black-X.png'}}-->
+                                    <span id = "starSpan" class="glyphicon glyphicon-star-empty"></span>
+                                </button>
+                                <button type="button" class="btn btn-default" id = "fbButton">
+                                    <span><img src="http://cs-server.usc.edu:45678/hw/hw8/images/facebook.png"
+                                               id="fbLogo" width="20px" height="20px"></span>
+                                <a href="#" ></a>
+                                </button>
+                            </div>
+                            <br>
+                            <br>
+                            <div class="progress" id = "progressBarTable">
+                                <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0"
+                                     aria-valuemax="100" style="width: 55%">
+                                    <span class="sr-only">45% Complete</span>
+                                </div>
+                            </div>
+
+                            <table class="table table-striped " id="infoTable" width="100%" style="height: 410px">
+
+                                <tr>
+                                    <th width="50%">Stock Ticker Symbol</th>
+                                    <td width=50%" id = "symbol"></td>
+                                </tr>
+                                <tr>
+                                    <th>Last Price</th>
+                                    <td id = "lastPrice">Stock Price</td>
+                                </tr>
+                                <tr>
+                                    <th>Change (Chnage Percent)</th>
+                                    <td id = "change">Stock Price</td>
+                                </tr>
+                                <tr>
+                                    <th>Timestamp</th>
+                                    <td id = "timeStamp">Stock Price</td>
+                                </tr>
+                                <tr>
+                                    <th>Open</th>
+                                    <td id = "open">Stock Price</td>
+                                </tr>
+                                <tr>
+                                    <th>Close</th>
+                                    <td id = "close">Stock Price</td>
+                                </tr>
+                                <tr>
+                                    <th>Day's Range</th>
+                                    <td id = "range">Stock Price</td>
+                                </tr>
+                                <tr>
+                                    <th>Volume</th>
+                                    <td id = "volume">Stock Price</td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="container-fluid">
+                                <ul class="nav nav-tabs" id = "indicators">
+                                    <li class = "active" id = "Price"><a >Price</a></li>
+                                    <li id = "SMA"><a>SMA</a></li>
+                                    <li id = "EMA"><a>EMA</a></li>
+                                    <li id = "STOCH"><a >STOCH</a> </li>
+                                    <li id = "RSI"><a >RSI</a> </li>
+                                    <li id = "ADX"><a >ADX</a> </li>
+                                    <li id = "CCI"><a >CCI</a> </li>
+                                    <li id = "BBANDS"><a >BBANDS</a> </li>
+                                    <li id = "MACD"><a >MACD</a> </li>
+                                </ul>
+
+                                <div class="progress" id = "progressBarChart">
+                                    <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0"
+                                         aria-valuemax="100" style="width: 55%">
+                                        <span class="sr-only">45% Complete</span>
+                                    </div>
+                                </div>
+
+                                <div id = "stockChart">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="historicalCharts" class="tab-pane fade ">
+                    <div id="historicalData"></div>
+                    <div class="progress" id = "progressBarhistoricalData">
+                        <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0"
+                             aria-valuemax="100" style="width: 55%">
+                            <span class="sr-only">45% Complete</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="newsFeeds" class="tab-pane fade ">
+                    <div id="newsTable"></div>
+                    <div class="progress" id = "progressBarnewsTable">
+                        <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0"
+                             aria-valuemax="100" style="width: 55%">
+                            <span class="sr-only">45% Complete</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>   <!-- panel -->
+</div>
+
+</body>
+</html>
+
