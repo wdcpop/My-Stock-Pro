@@ -1,8 +1,7 @@
 // var app = angular.module('hw8', ['ngMaterial']);
-var SERVER_URL = "http://localhost:8080";
-// var SERVER_URL = "hw8_dev.php";
+var SERVER_URL = "http://localhost:8080"; 
 
-angular.module('hw8', ['ngMaterial', 'ngAnimate']).controller('mainController', function ($http, $scope){
+angular.module('stockApp', ['ngMaterial', 'ngAnimate']).controller('mainController', function ($http, $scope){
 
     this.querySearch = querySearch;
     $scope.disableButton = false;
