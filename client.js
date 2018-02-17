@@ -8,8 +8,7 @@ angular.module('stockApp', ['ngMaterial', 'ngAnimate']).controller('mainControll
     $scope.slide = false;
     $scope.priceVolume = {};
     $scope.tableInfo = [];
-    $scope.showFav = true;
-    // $scope.showChart = false;
+    $scope.showFav = true; 
 
     function parseObj(responseArray){
         var rst = new Array();
@@ -28,39 +27,8 @@ angular.module('stockApp', ['ngMaterial', 'ngAnimate']).controller('mainControll
         return rst;
     }
 
-    // $scope.getQuote = function (searchText){
-    //     console.log("searchText: " + searchText);
-    //     console.log(SERVER_URL);
-    //     $http({
-    //         method : "GET",
-    //         url : SERVER_URL,
-    //         params: {"symbol" : searchText,
-    //             'indicator': "xxx"
-    //         }
-    //     }).then(function success(response){
-    //
-    //         $scope.priceVolume = parsePriceVolume(response.data);
-    //
-    //     },function myError(response){
-    //         console.log("myError Function ");
-    //     });
-    //     // $http({
-    //     //     method : "GET",
-    //     //     url : SERVER_URL,
-    //     //     params: {"symbol" : searchText}
-    //     // }).then(function success(response){
-    //     //
-    //     //     $scope.priceVolume = parsePriceVolume(response.data);
-    //     //
-    //     // },function myError(response){
-    //     //     console.log("myError Function ");
-    //     // });
-    // }
 
-
-    function querySearch(query) {
-        // $scope.disableButton = ((query.length <= 0) ? true : false);
-        // console.log("$scope.disableButton: " + $scope.disableButton);
+    function querySearch(query) { 
         return $http({
             method: "GET",
             url: SERVER_URL,
@@ -437,10 +405,7 @@ function drawhistoricalChart(info, subtitle) {
                  textAlign: "center"
              }
          },
-
-        // rangeSelector: {
-        //     selected: 0
-        // },
+ 
 
          rangeSelector: {
              buttons: [{
@@ -729,11 +694,7 @@ $( document ).ready(function() {
 
 
         var symbol = $('#input-0').val();
-
-        // var input = $('#input-0').val();
-        console.log("input-0: " + symbol);
-
-        //price & volume
+  
         $.ajax({
             type: 'GET',
             url: SERVER_URL,
@@ -930,8 +891,6 @@ $( document ).ready(function() {
 
                 drawNewsTable(newsJson);
 
-                // newsData = parseNews(newsJson);
-
             }
         });
     });
@@ -947,10 +906,7 @@ $( document ).ready(function() {
         $('#CCI').removeClass('active');
         $('#BBANDS').removeClass('active');
         $('#MACD').removeClass('active');
-
-        // $( "#progressBarTable" ).css("display", "none");
-        // $( "#progressBarChart" ).css("display", "none");
-        // $( "#infoTable" ).css("display", "block");
+ 
         drawPriceVolume(PriceData, subtitle);
     });
 
